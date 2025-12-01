@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt‑BR">
+<head>
+  <meta charset="UTF‑8">
+  <title>Saneamento de Água potável — Recife</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f4f4f9;
+    }
+    header {
+      background: #0066cc;
+      color: white;
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      padding: 1rem;
+    }
+    .cards {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      flex: 1 1 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      margin: 0 0 .5rem 0;
+      font-size: 2rem;
+    }
+    .card p {
+      margin: 0;
+      color: #555;
+    }
+    canvas {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Dashboard de Saneamento – Recife (PE)</h1>
+  </header>
+
+  <div class="container">
+    <div class="cards">
+      <div class="card">
+        <h2 id="aguaPercent">‑</h2>
+        <p>% da população com água tratada</p>
+      </div>
+      <div class="card">
+        <h2 id="esgotoPercent">‑</h2>
+        <p>% da população com esgoto coletado/tratado</p>
+      </div>
+      <div class="card">
+        <h2 id="popTotal">‑</h2>
+        <p>População total (estimada)</p>
+      </div>
+    </div>
+
+    <canvas id="chartEsgotoAgua" width="600" height="300"></canvas>
+  </div>
+
+  <script>
+    // — Dados de exemplo para Recife — adapte conforme nova fonte/CSV/JSON
+    const dadosRecife = {
+      aguaTratadaPercent: 82,          // 82% têm acesso a abastecimento de água :contentReference[oaicite:2]{index=2}
+      esgotoColetadoPercent: 41.6,     // 41,6% têm serviço de esgotamento sanitário :contentReference[oaicite:3]{index=3}
+      populacao: 1503769               // população estimada :contentReference[oaicite:4]{index=4}
+    };
+
+    // Preencher os cards
+    document.getElementById('aguaPercent').innerText = dadosRecife.aguaTratadaPercent + '%';
+    document.getElementById('esgotoPercent').innerText = dadosRecife.esgotoColetadoPercent + '%';
+    document.getElementById('popTotal').innerText = dadosRecife.populacao.toLocaleString('pt-BR');
+
+    // Gráfico de comparação Água vs Esgoto
+    const ctx = document.getElementById('chartEsgotoAgua').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Água tratada', 'Esgoto coletado/tratado'],
+        datasets: [{
+          label: '% da população',
+          data: [dadosRecife.aguaTratadaPercent, dadosRecife.esgotoColetadoPercent],
+          backgroundColor: ['#007bff80', '#28a74580'],
+          borderColor: ['#007bff', '#28a745'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
